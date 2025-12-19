@@ -15,16 +15,16 @@ de recursos y herramientas a utilizar. Concretamente, emplearemos la libre ría 
 varias funcionalidades, entre ellas, mostrar botones con un aspecto estético mejorado respecto a la 
 representación estándar.   
 El alumnado es libre de utilizar más librerías en la realización de l a presente actividad  para mejorar el 
-aspecto final de la página , pero en cualquier  caso , puesto que el objetivo de la activid ad es emplear 
-JavaS cript, HTML y CSS, estos deben ser los lenguajes  a emplear, no siendo posible utilizar soluciones más 
+aspecto final de la página , pero en cualquier  caso , puesto que el objetivo de la actividad es emplear 
+JavaScript, HTML y CSS, estos deben ser los lenguajes  a emplear, no siendo posible utilizar soluciones más 
 complejas como React /Angular y Sass/PostCSS , entre otras .  
 En esta actividad vamos a utilizar lo estudiado en clases de teoría. Aunque las especificaciones pueden ser 
 incompletas, deberían ser suficientes para conseguir un aspecto bastante similar a las referencias gráficas 
 que aqu í aparecen.  
-Durante el transcurso de la actividad , el alumno podr á apreciar que una  misma idea puede implementarse 
-de m últiples formas; por ello se pretende  que se re flexione sobre estas alternativas y elija la opci ón que 
-le parezca m ás conveniente, tratando de justi ficarla adecuadamente.  Asimismo, es probable que deba 
-consultar algunos detalles de implementaci ón no impartidos en la asignatura , para que así el alumno 
+Durante el transcurso de la actividad , el alumno podrá apreciar que una  misma idea puede implementarse 
+de múltiples formas; por ello se pretende  que se re flexione sobre estas alternativas y elija la opción que 
+le parezca m ás conveniente, tratando de justificarla adecuadamente.  Asimismo, es probable que deba 
+consultar algunos detalles de implementación no impartidos en la asignatura , para que así el alumno 
 ejercite la competencia de aprendizaje permanente.  
  
 2. Explicación del juego  
@@ -42,7 +42,7 @@ demasiado denso o largo y poder hacer pruebas de forma rápida y ágil, como por
 9-12 de  cada palo. Asimismo, debe ser  sencillo poder modificar el número de cartas por palo para 
 poder probar el funcionamiento de la aplicación. Por tanto, u na vez que el juego esté mínimamente 
 validado, debería ser algo extremadamente fácil conmutar al juego completo de cartas, por lo que 
-todo el software debe prec oncebirse para este cambio de circunstancias.  
+todo el software debe preconcebirse para este cambio de circunstancias.  
 ▪ Existirán 6 tapetes (superficies que albergarán mazos de cartas): el tapete inicial, el tapete de 
 sobrantes y cuatro tapetes receptores, tal y como puede observarse en la  Figura 1, que albergarán 
 sendos mazos de cartas a lo largo de la partida.  
@@ -80,7 +80,7 @@ En la Figura 1 puede observarse el juego en un supuesto estado inicial.
  
  
  
-Figura 1. Situaci ón inicial tras seleccionar el juego  
+Figura 1. Situación inicial tras seleccionar el juego  
  
  
  
@@ -113,11 +113,11 @@ comentario:
 /*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/  
 Se sugiere que se sigan las indicaciones que aparecen como comentarios tanto en los ficheros 
 solitario.css  y solitario.html , y especialmente en solitario.js  para primeramente comprender 
-el contexto  del juego y a continuaci ón rellenar el c ódigo JavaScript necesario  para poner en marcha los 
+el contexto  del juego y a continuación rellenar el código JavaScript necesario  para poner en marcha los 
 primeros pasos del mismo.  
 NOTA : para la realización de l a actividad únicamente se pueden utilizar tecnologías HTML, CSS y 
 JavaScript. No se pueden utilizar frameworks  como Angular (o similares) o tecnologías como SCSS.  
-3.2. Creación de  los tapetes i niciales y contadores  
+3.2. Creación de  los tapetes iniciales y contadores  
 A continuación se indican una serie de tareas que hay que realizar en los diferentes ficheros solitario.* : 
 ▪ Insertar el logo de la VIU a la derecha del encabezado principal.  
 ▪ Crear el mazo de la baraja con las cartas oportunas.  
@@ -150,7 +150,7 @@ un doble bucle ani dado  (con, por ejemplo, índices i y j) y se añada a cada e
 atributos tipo data- que sirvan para identificar de forma clara y sencilla la carta, concretamente el número 
 de la carta y el palo. Por ejemplo:  
 img_carta.setAttribute("data -palo", palos[i]);  
-img_carta.setAttribute("data -numero", numeros[j]);  
+img_carta.setAttribute("data -numero", números[j]);  
 Téngase en cuenta un pequeño detalle gráfico (que tendrá sus consecuencias probablemente en el 
 control):  
 ▪ Las cartas del tapete inicial tendrán un desplazamiento geométrico superior e izquierdo de varios 
@@ -208,7 +208,7 @@ oportunamente esta información.
 Los dos argumentos de la función setData  del código ejemplo anterior son realmente un par nombre -
 valor : en primer lugar, el nombre  del valor que se va a pasar (es usual que tenga aspecto de tipo MIME 
 con bastantes grados de libertad, tal y como se puede observar en el ejemplo); el segundo argumento es 
-propiamente el valor que deseamos pasar. Posteriormente, este valor podrá ser recup erado (por ejemplo , 
+propiamente el valor que deseamos pasar. Posteriormente, este valor podrá ser recuperado (por ejemplo , 
 en la función asociada al evento drop , si así se estima necesario) aludiendo a su nombre empleando la 
 función getData  tal y como se describe en el siguiente ejemplo:  
 let numero = e.dataTransfer.getData("text/plain/numero");  
@@ -238,8 +238,8 @@ objeto que se mueve.
 Tal y como hemos comentado anteriormente, la sugerencia que indicamos es que el objeto que se mueva 
 sea un elemento HTML de tipo <img>  y el que reciba a este, un elemento div. 
 Hay que programar la reacción a los eventos: dragenter , dragover , dragleave  y drop . Para los tres 
-primeros no se va a realizar ninguna acció n específica salvo indicarle al navegador que no haga lo que 
-tiene asignado po r defecto, ya que ello tendría como consecuencia la imposibilidad de consegui r el 
+primeros no se va a realizar ninguna acción específica salvo indicarle al navegador que no haga lo que 
+tiene asignado po r defecto, ya que ello tendría como consecuencia la imposibilidad de conseguir el 
 resultado deseado. Para el evento drop , sí que habrá que especificar un a serie de acciones que estarán 
 íntimamente ligadas con las reglas y operatividad  del juego. Así pues, se sugiere que se programen los 
 eventos indicado s tal y como se muestra a continuación:  
@@ -249,7 +249,7 @@ eventos indicado s tal y como se muestra a continuación:
  
 destino.ondragenter = function(e) { e.preventDefault(); }; 
 destino.ondragover = function(e) { e.preventDefault(); }; 
-destino.ondra gleave = function(e) { e.preventDefault(); }; 
+destino.ondragleave = function(e) { e.preventDefault(); }; 
 destino.ondrop = soltar;  
 Puede observarse que , para los tres primeros eventos, la acción a realizar se reduce a prevenir o evitar 
 hacer cierta acción por defecto por parte del navegador mediante el método preventDefault  asociado 
@@ -272,11 +272,11 @@ En caso de que se cumplan las citadas condiciones, la carta será añadida al ta
 automáticamente del tapete inicial  (o del de sobrantes, si ese es su origen) ; esto lo hará en principio el 
 navegador). Recuérdese que se sugirió que las cartas de cada tapete estuvieran dentro de un array (con 
 prefijo mazo- en las variables empleadas para ello); en tal caso se puede eliminar de un mazo e introducirla 
-en otro mediante los métodos pop y push  propios de los arrays en JavaScript. Deberían a ctualizarse 
+en otro mediante los métodos pop y push propios de los arrays en JavaScript. Deberían a actualizarse 
 convenientemente los contadores de cartas de los tapetes origen y destino del movimiento. Si el tapete 
 destino es un tapete receptor, se sugiere que se pongan las cartas una encima de otra sin desplazamiento 
-entre ellas. Entre ciertas posibilid ades, hay una forma sencilla de centrar  un elemento dentro de otro:  
-// Con esto, el v értice superior izquierdo de la carta queda en el centro del tapete  
+entre ellas. Entre ciertas posibilidades, hay una forma sencilla de centrar  un elemento dentro de otro:  
+// Con esto, el vértice superior izquierdo de la carta queda en el centro del tapete  
 carta.style.top = "50 %";  
 carta.style.left = "50 %";  
 // Con la siguiente traslación , se centra definitivamente  en el tapete: se desplaza,  
@@ -289,7 +289,7 @@ navegador se encargará automáticamente de deshacer  el movimiento mostrando la
 que estaba ubicada originalmente.  
 Téngase en cuenta que la programación de estos eventos debe ser para todos los tapetes potencialmente 
 receptores. Ello implica que se puede realizar de forma replicada o individualizada para todos y cada uno 
-de ellos, o bien, diseñar una función lo suficie ntemente genérica como para que se asigne por igual a 
+de ellos, o bien, diseñar una función lo suficientemente genérica como para que se asigne por igual a 
 
  
 -9- 
@@ -337,7 +337,7 @@ en el supuesto caso de que esas sean nuestras intenciones. En cualquier caso , o
 probablemente que el aspecto de nuestra página ha cambiado en algunos detalles cuyo motivo será muy 
 probablemente que BootStrap  reescribe algunas declaraciones de estilo que no son controladas por 
 nuestros ficheros de estilo. Búsquese información sobre tipos de botones en BootStrap . Una sugerencia 
-de uso p uede ser la que se muestra a continuación:  
+de uso puede ser la que se muestra a continuación:  
 <button type="button" class="btn btn -primary" id="aSolitario">  
   Solitario  
 </button>  
