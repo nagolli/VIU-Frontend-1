@@ -38,7 +38,6 @@ let mazoReceptor4 = [];
 
 // Desarrollo del comienzo de juego
 function comenzarJuego() {
-	console.log("Comenzando juego...");
 	/* Crear baraja, es decir crear el mazoInicial. Este será un array cuyos 
 	elementos serán elementos HTML <img>, siendo cada uno de ellos una carta.
 	Sugerencia: en dos bucles for, bárranse los "palos" y los "numeros", formando
@@ -54,7 +53,6 @@ function comenzarJuego() {
 	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
 
 	// Puesta a cero de contadores de mazos
-	console.log("resetContadores...");
 	resetContadores();
 
 	// Arrancar el conteo de tiempo
@@ -79,14 +77,13 @@ function cargarTapeteInicial(mazo) {
 //CLASE
 class Contador {
 	id /**string, id de elemento */;
-	default; /** int */
+	defaultValue; /** int */
 	value; /** int */
 
 	constructor(idElemento, initValue = 0) {
 		this.id = idElemento;
-		this.default = initValue;
+		this.defaultValue = initValue;
 		this.value = initValue;
-		console.log(this.id, this.value);
 		this.updateVisual();
 	}
 
@@ -101,7 +98,7 @@ class Contador {
 	}
 
 	reset() {
-		this.value = this.default;
+		this.value = this.defaultValue;
 		this.updateVisual();
 	}
 
@@ -159,7 +156,7 @@ class Temporizador extends Contador {
 
 	reanudar() {
 		if (this.temporizador) clearInterval(this.temporizador); //Limpieza de temporizador, si no se hubiera limpiado antes
-		this.temporizador = setInterval(super.incContador.bind(this), 1000); //<-- Bind sugerido por Copilot, ya que setInterval ejecuta a nivel de window y no lo ejecutaba en el contexto de la clase
+		this.temporizador = setInterval(() => this.incContador(), 1000);
 	}
 
 	//Funcion originalmente sugerida por Ismael
