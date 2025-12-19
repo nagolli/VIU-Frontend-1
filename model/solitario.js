@@ -124,7 +124,7 @@ let contReceptor4 = new Contador("contador_receptor4", 0);
 let contMovimientos = new Contador("contador_movimientos");
 
 //FUNCIONES SOBRE CONJUNTO DE CONTADORES
-resetContadores = function () {
+function resetContadores() {
 	contInicial.reset();
 	contSobrantes.reset();
 	contReceptor1.reset();
@@ -146,7 +146,7 @@ class Baraja {
 	estadoInicial; /** Array de cartas, iniciales, sin desordenar*/
 	mazo; /** Array de cartas */
 	id; /** string, id de elemento en DOM del tapete*/
-	reglaAdmision; /** Función que define la regla de admisión de cartas de esta la baraja */
+	reglaAdmision; /** Función que define la regla de admisión de cartas de esta baraja */
 	puedeSacar; /** bool, define si se puede sacar carta de esta baraja */
 	mostrarTodas; /** bool, true, muestra todas, false muestra la ultima */
 	alVaciarse; /** Función que se ejecuta al vaciarse la baraja */
@@ -281,7 +281,7 @@ let mazoReceptor3 = new Baraja({ id: "receptor3", reglaAdmitir: siguiente, conta
 let mazoReceptor4 = new Baraja({ id: "receptor4", reglaAdmitir: siguiente, contador: contReceptor4 });
 
 //FUNCIONES
-resetMazos = function () {
+function resetMazos() {
 	mazoInicial.reiniciar();
 	mazoSobrantes.reiniciar();
 	mazoReceptor1.reiniciar();
@@ -370,8 +370,6 @@ function comenzarJuego() {
 //#endregion
 
 //Iniciar el juego al cargar la página
-setTimeout(() => {
-	comenzarJuego();
-	//Test mover cartas
-	testMove(mazoReceptor1);
-}, 100);
+comenzarJuego();
+//Test mover cartas
+testMove(mazoReceptor1);
