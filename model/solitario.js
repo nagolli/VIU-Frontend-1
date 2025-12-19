@@ -1,84 +1,84 @@
-/***** INICIO DECLARACIÓN DE VARIABLES GLOBALES *****/
+//#region REGLAS DEL JUEGO
+//se colocan cartas en orden decreciente (comenzando con 12) y alternando colores (naranja y gris).
+function siguiente(prev, sig) { return siguienteNumero(prev, sig) && siguientePalo(prev, sig); }
+function siguienteNumero(prev, sig) { return (prev == undefined && sig.numero == 12) || (sig.numero === prev?.numero - 1) }
+function siguientePalo(prev, sig) {
+	if (!prev) return true;
+	return (prev.palo === palos[0] || prev.palo === palos[1] ? sig.palo == palos[2] || sig.palo == palos[3] : sig.palo == palos[0] || sig.palo == palos[1]);
+}
 
+//Comprobar victoria
+function comprobarVictoria() {
+	return mazoInicial.next() === undefined && mazoSobrantes.next() === undefined;
+}
+
+//Volcar sobrantes a inicial al vaciarse el inicial
+function volcarSobrantesAInicial() {
+	while (mazoSobrantes.next() !== undefined) {
+		mazoSobrantes.moverA(mazoInicial, true);
+	}
+}
+//#endregion
+
+//#region CARTA
+//CONSTANTES
 // Array de palos
-let palos = ["viu", "cua", "hex", "cir"];
+const palos = ["viu", "cua", "hex", "cir"];
 // Array de número de cartas
 //let numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-// En las pruebas iniciales solo se trabajará con cuatro cartas por palo:
-let numeros = [9, 10, 11, 12];
+const numeros = [9, 10, 11, 12];
+class Carta {
+	palo; /** string, de palos  */
+	numero; /** int, número de carta */
+	imgElement; /** Elemento img asociado a la carta */
+	currentParent; /** Elemento padre actual del imgElement */
 
-// paso (top y left) en pixeles de una carta a la siguiente en un mazo
-let paso = 5;
+	constructor(palo, numero) {
+		this.palo = palo;
+		this.numero = numero;
+		this.rutaImagen = `../images/baraja/${numero}-${palo}.png`;
+	}
 
-// Tapetes				
-let tapeteInicial = document.getElementById("inicial");
-let tapeteSobrantes = document.getElementById("sobrantes");
-let tapeteReceptor1 = document.getElementById("receptor1");
-let tapeteReceptor2 = document.getElementById("receptor2");
-let tapeteReceptor3 = document.getElementById("receptor3");
-let tapeteReceptor4 = document.getElementById("receptor4");
+	imprimir(x, y, z, newParent) {
+		if (!this.imgElement) {
+			this.imgElement = document.createElement("img");
+			this.imgElement.style.position = "absolute";
+			newParent.appendChild(this.imgElement);
+			this.currentParent = newParent;
+			this.imgElement.src = this.rutaImagen;
+			this.imgElement.style.maxWidth = "80px";
+			this.imgElement.style.maxHeight = "100px";
+		}
+		this.currentParent.removeChild(this.imgElement);
+		newParent.appendChild(this.imgElement);
+		this.currentParent = newParent;
+		this.imgElement.style.left = `${x}px`;
+		this.imgElement.style.top = `${y}px`;
+		this.imgElement.style.zIndex = z + 1;
+	}
+}
 
-// Mazos
-let mazoInicial = [];
-let mazoSobrantes = [];
-let mazoReceptor1 = [];
-let mazoReceptor2 = [];
-let mazoReceptor3 = [];
-let mazoReceptor4 = [];
+//Funciones
+function todasLasCartas() {
+	let cartas = [];
+	for (let palo of palos) {
+		for (let numero of numeros) {
+			cartas.push(new Carta(palo, numero));
+		}
+	}
+	return cartas;
+}
 
-/***** FIN DECLARACIÓN DE VARIABLES GLOBALES *****/
-
-
-// Rutina asociada a boton reset
-/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
-
-
-// El juego arranca ya al cargar la página: no se espera a reiniciar
-/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
-
-// Desarrollo del comienzo de juego
-function comenzarJuego() {
-	/* Crear baraja, es decir crear el mazoInicial. Este será un array cuyos 
-	elementos serán elementos HTML <img>, siendo cada uno de ellos una carta.
-	Sugerencia: en dos bucles for, bárranse los "palos" y los "numeros", formando
-	oportunamente el nombre del fichero png que contiene a la carta (recuérdese poner
-	el path correcto en la URL asociada al atributo src de <img>). Una vez creado
-	el elemento img, inclúyase como elemento del array mazoInicial. 
-	*/
-
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
-
-
-	// Barajar y dejar mazoInicial en tapete inicial
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
-
-	// Puesta a cero de contadores de mazos
-	resetContadores();
-
-	// Arrancar el conteo de tiempo
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
-
-} // comenzarJuego
-
-/**
-	  En el elemento HTML que representa el tapete inicial (variable tapeteInicial)
-	se deben añadir como hijos todos los elementos <img> del array mazo.
-	Antes de añadirlos, se deberían fijar propiedades como la anchura, la posición,
-	coordenadas top y left, algun atributo de tipo data-...
-	Al final se debe ajustar el contador de cartas a la cantidad oportuna
-*/
-function cargarTapeteInicial(mazo) {
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
-} // cargarTapeteInicial
+//#endregion
 
 //#region CONTADORES
 //Contadores de cartas
 
 //CLASE
 class Contador {
-	id /**string, id de elemento */;
-	defaultValue; /** int */
-	value; /** int */
+	id /**string, id de elemento en DOM*/;
+	defaultValue; /** int, valor inicial y para reset */
+	value; /** int, valor actual */
 
 	constructor(idElemento, initValue = 0) {
 		this.id = idElemento;
@@ -135,6 +135,163 @@ resetContadores = function () {
 }
 //#endregion
 
+//#region BARAJA
+//CONSTANTES
+// paso (top y left) en pixeles de una carta a la siguiente en un mazo
+const paso = 5;
+
+//CLASE
+class Baraja {
+	//Baraja actua como una PILA FILO
+	estadoInicial; /** Array de cartas, iniciales, sin desordenar*/
+	mazo; /** Array de cartas */
+	id; /** string, id de elemento en DOM del tapete*/
+	reglaAdmision; /** Función que define la regla de admisión de cartas de esta la baraja */
+	puedeSacar; /** bool, define si se puede sacar carta de esta baraja */
+	mostrarTodas; /** bool, true, muestra todas, false muestra la ultima */
+	alVaciarse; /** Función que se ejecuta al vaciarse la baraja */
+	contador; /** Contador asociado a esta baraja */
+	constructor({
+		id,
+		reglaAdmitir,
+		puedeSacar = false,
+		mostrarTodas = false,
+		estadoInicial = [],
+		alVaciarse = () => { },
+		contador
+	}) {
+		this.estadoInicial = estadoInicial;
+		this.id = id;
+		this.puedeSacar = puedeSacar;
+		this.reglaAdmision = reglaAdmitir;
+		this.mostrarTodas = mostrarTodas;
+		this.alVaciarse = alVaciarse;
+		this.contador = contador;
+		this.reiniciar(); //Set mazo
+	}
+
+	next() {
+		return this.mazo.length > 0 ? this.mazo[this.mazo.length - 1] : undefined;
+	}
+
+	push(carta) {
+		this.mazo.push(carta);
+	}
+
+	moverA(otraBaraja, forzar = false) {
+		if (!this.puedeSacar) return;
+		const carta = this.next();
+		if (carta) {
+			if (forzar || otraBaraja.admite(carta)) {
+				this.mazo.pop();
+				this.contador.decContador();
+				otraBaraja.push(carta);
+				otraBaraja.contador.incContador();
+				contMovimientos.incContador();
+				this.imprimir();
+				otraBaraja.imprimir();
+			}
+		}
+		if (this.next() === undefined) {
+			this.alVaciarse();
+		}
+	}
+
+	admite(cartaSiguiente) {
+		const cartaAnterior = this.next();
+		if (cartaSiguiente)
+			return this.reglaAdmision(cartaAnterior, cartaSiguiente);
+		return false;
+	}
+
+	imprimir() {
+		const tapete = document.getElementById(this.id);
+		if (tapete) {
+			const x = 5;
+			const y = 5;
+			if (!this.mostrarTodas) {
+				const carta = this.next();
+				if (carta) carta.imprimir(x, y, this.mazo.length - 1, tapete);
+			} else {
+				for (let i = 0; i < this.mazo.length; i++) {
+					this.mazo[i].imprimir(x + i * paso, y + i * paso, i, tapete);
+				}
+			}
+		}
+	}
+
+	barajar() {
+		if (this.mazo.length == 0) return;
+		//Para cada carta desde el final
+		for (let i = this.mazo.length - 1; i > 0; i--) {
+			//Establecer una posición aleatoria
+			const j = Math.floor(Math.random() * (i + 1));
+			// Permutar las cartas en las posiciones i y j
+			[this.mazo[i], this.mazo[j]] = [this.mazo[j], this.mazo[i]];
+		}
+		//Esto garantiza que todas las cartas se han movido 1 vez a una posicion aleatoria del mazo
+	}
+	cortar() {
+		if (this.mazo.length == 0) return;
+		const puntoCorte = Math.floor((Math.random() * this.mazo.length));
+		this.mazo = this.mazo.slice(puntoCorte).concat(this.mazo.slice(0, puntoCorte));
+	}
+
+	reiniciar() {
+		this.mazo = [...this.estadoInicial];
+		this.barajar();
+		this.cortar();
+		this.imprimir();
+	}
+}
+
+//VARIABLES
+// Mazos
+let mazoInicial = new Baraja({
+	id: "inicial",
+	reglaAdmitir: () => false,
+	puedeSacar: true,
+	mostrarTodas: true,
+	estadoInicial: todasLasCartas(),
+	alVaciarse: () => {
+		if (comprobarVictoria()) {
+			//Ejecutar victoria
+			alert("¡Has ganado!");
+		} else {
+			volcarSobrantesAInicial();
+		}
+	},
+	contador: contInicial
+});
+let mazoSobrantes = new Baraja({
+	id: "sobrantes",
+	reglaAdmitir: () => true,
+	puedeSacar: true,
+	alVaciarse: () => {
+		if (comprobarVictoria()) {
+			//Ejecutar victoria
+			alert("¡Has ganado!");
+		}
+	},
+	contador: contSobrantes
+});
+let mazoReceptor1 = new Baraja({ id: "receptor1", reglaAdmitir: siguiente, contador: contReceptor1 });
+let mazoReceptor2 = new Baraja({ id: "receptor2", reglaAdmitir: siguiente, contador: contReceptor2 });
+let mazoReceptor3 = new Baraja({ id: "receptor3", reglaAdmitir: siguiente, contador: contReceptor3 });
+let mazoReceptor4 = new Baraja({ id: "receptor4", reglaAdmitir: siguiente, contador: contReceptor4 });
+
+//FUNCIONES
+resetMazos = function () {
+	mazoInicial.reiniciar();
+	mazoSobrantes.reiniciar();
+	mazoReceptor1.reiniciar();
+	mazoReceptor2.reiniciar();
+	mazoReceptor3.reiniciar();
+	mazoReceptor4.reiniciar();
+}
+
+//#endregion
+
 //#region TEMPORIZADOR
 //CLASE
 class Temporizador extends Contador {
@@ -146,7 +303,7 @@ class Temporizador extends Contador {
 	}
 
 	reiniciar() {
-		super.setContador(0);
+		this.reset();
 		this.reanudar();
 	}
 
@@ -182,21 +339,39 @@ let contTiempo = new Temporizador("contador_tiempo");
 
 //#endregion
 
-//#region BARAJA
+//#region TESTING
+//Funcion para testear el movimiento automático de cartas sin el drag&drop
+function testMove(r) {
+	setTimeout(() => {
+		if (r.mazo.length == numeros.length)
+			testMove(r == mazoReceptor1 ? mazoReceptor2 : r == mazoReceptor2 ? mazoReceptor3 : r == mazoReceptor3 ? mazoReceptor4 : mazoReceptor1);
+		else {
+			mazoInicial.moverA(r);
+			setTimeout(() => {
+				if (Math.random() > 0.1) mazoInicial.moverA(mazoSobrantes);
+				testMove(r == mazoReceptor1 ? mazoReceptor2 : r == mazoReceptor2 ? mazoReceptor3 : r == mazoReceptor3 ? mazoReceptor4 : mazoReceptor1);
+			}, 500);
+		}
+	}, 500);
+}
+//#endregion
 
-/**
-	Si mazo es un array de elementos <img>, en esta rutina debe ser
-	reordenado aleatoriamente. Al ser un array un objeto, se pasa
-	por referencia, de modo que si se altera el orden de dicho array
-	dentro de la rutina, esto aparecerá reflejado fuera de la misma.
-*/
-function barajar(mazo) {
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
-} // barajar
-
+//#region GUI
+// Rutina asociada a boton reset
+// Desarrollo del comienzo de juego
+function comenzarJuego() {
+	// Barajar y dejar mazoInicial en tapete inicial
+	resetMazos();
+	// Puesta a cero de contadores de mazos
+	resetContadores();
+	// Arrancar el conteo de tiempo
+	contTiempo.reiniciar();
+}
 //#endregion
 
 //Iniciar el juego al cargar la página
 setTimeout(() => {
 	comenzarJuego();
+	//Test mover cartas
+	testMove(mazoReceptor1);
 }, 100);
