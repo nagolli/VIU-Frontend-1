@@ -48,10 +48,11 @@ class Carta {
 			this.imgElement.src = this.rutaImagen;
 			this.imgElement.style.maxWidth = "80px";
 			this.imgElement.style.maxHeight = "100px";
+		} else {
+			this.currentParent.removeChild(this.imgElement);
+			newParent.appendChild(this.imgElement);
+			this.currentParent = newParent;
 		}
-		this.currentParent.removeChild(this.imgElement);
-		newParent.appendChild(this.imgElement);
-		this.currentParent = newParent;
 		this.imgElement.style.left = `${x}px`;
 		this.imgElement.style.top = `${y}px`;
 		this.imgElement.style.zIndex = z + 1;
@@ -247,6 +248,7 @@ class Baraja {
 
 //VARIABLES
 // Mazos
+let mazoOrigen; //Referencia al mazo origen del Drag&Drop
 let mazoInicial = new Baraja({
 	id: "inicial",
 	reglaAdmitir: () => false,
@@ -256,7 +258,9 @@ let mazoInicial = new Baraja({
 	alVaciarse: () => {
 		if (comprobarVictoria()) {
 			//Ejecutar victoria
-			alert("¡Has ganado!");
+			setTimeout(() =>
+				alert("¡Has ganado!\nTiempo: " + contTiempo.HHMMSS() + "\nMovimientos: " + contMovimientos.value)
+				, 100);
 		} else {
 			volcarSobrantesAInicial();
 		}
@@ -341,13 +345,14 @@ let contTiempo = new Temporizador("contador_tiempo");
 
 //#region TESTING
 //Funcion para testear el movimiento automático de cartas sin el drag&drop
+let nextAutoMove;
 function testMove(r) {
-	setTimeout(() => {
+	nextAutoMove = setTimeout(() => {
 		if (r.mazo.length == numeros.length)
 			testMove(r == mazoReceptor1 ? mazoReceptor2 : r == mazoReceptor2 ? mazoReceptor3 : r == mazoReceptor3 ? mazoReceptor4 : mazoReceptor1);
 		else {
 			mazoInicial.moverA(r);
-			setTimeout(() => {
+			nextAutoMove = setTimeout(() => {
 				if (Math.random() > 0.1) mazoInicial.moverA(mazoSobrantes);
 				testMove(r == mazoReceptor1 ? mazoReceptor2 : r == mazoReceptor2 ? mazoReceptor3 : r == mazoReceptor3 ? mazoReceptor4 : mazoReceptor1);
 			}, 500);
@@ -360,6 +365,7 @@ function testMove(r) {
 // Rutina asociada a boton reset
 // Desarrollo del comienzo de juego
 function comenzarJuego() {
+	if (nextAutoMove) clearTimeout(nextAutoMove);
 	// Barajar y dejar mazoInicial en tapete inicial
 	resetMazos();
 	// Puesta a cero de contadores de mazos
@@ -370,6 +376,8 @@ function comenzarJuego() {
 //#endregion
 
 //Iniciar el juego al cargar la página
-comenzarJuego();
-//Test mover cartas
-testMove(mazoReceptor1);
+setTimeout(() => {
+	comenzarJuego();
+	//Test mover cartas
+	//testMove(mazoReceptor1);
+}, 100);
