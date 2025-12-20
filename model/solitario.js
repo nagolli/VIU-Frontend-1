@@ -17,6 +17,14 @@ function volcarSobrantesAInicial() {
 	while (mazoSobrantes.next() !== undefined) {
 		mazoSobrantes.moverA(mazoInicial, true);
 	}
+	mazoInicial.barajar();
+	mazoInicial.imprimir();
+}
+
+function ejecutarVictoria() {
+	setTimeout(() =>
+		alert("¡Has ganado!\nTiempo: " + contTiempo.HHMMSS() + "\nMovimientos: " + contMovimientos.value)
+		, 50);
 }
 //#endregion
 
@@ -258,9 +266,7 @@ let mazoInicial = new Baraja({
 	alVaciarse: () => {
 		if (comprobarVictoria()) {
 			//Ejecutar victoria
-			setTimeout(() =>
-				alert("¡Has ganado!\nTiempo: " + contTiempo.HHMMSS() + "\nMovimientos: " + contMovimientos.value)
-				, 100);
+			ejecutarVictoria();
 		} else {
 			volcarSobrantesAInicial();
 		}
@@ -273,8 +279,7 @@ let mazoSobrantes = new Baraja({
 	puedeSacar: true,
 	alVaciarse: () => {
 		if (comprobarVictoria()) {
-			//Ejecutar victoria
-			alert("¡Has ganado!");
+			ejecutarVictoria();
 		}
 	},
 	contador: contSobrantes
@@ -353,7 +358,7 @@ function testMove(r) {
 		else {
 			mazoInicial.moverA(r);
 			nextAutoMove = setTimeout(() => {
-				if (Math.random() > 0.1) mazoInicial.moverA(mazoSobrantes);
+				mazoInicial.moverA(mazoSobrantes);
 				testMove(r == mazoReceptor1 ? mazoReceptor2 : r == mazoReceptor2 ? mazoReceptor3 : r == mazoReceptor3 ? mazoReceptor4 : mazoReceptor1);
 			}, 500);
 		}
@@ -379,5 +384,5 @@ function comenzarJuego() {
 setTimeout(() => {
 	comenzarJuego();
 	//Test mover cartas
-	//testMove(mazoReceptor1);
-}, 100);
+	testMove(mazoReceptor1);
+}, 50);
