@@ -1,10 +1,19 @@
 //#region REGLAS DEL JUEGO
 //se colocan cartas en orden decreciente (comenzando con 12) y alternando colores (naranja y gris).
-function siguiente(prev, sig) { return siguienteNumero(prev, sig) && siguientePalo(prev, sig); }
-function siguienteNumero(prev, sig) { return (prev == undefined && sig.numero == 12) || (sig.numero === prev?.numero - 1) }
+function siguiente(prev, sig) {
+	return siguienteNumero(prev, sig) && siguientePalo(prev, sig);
+}
+
+function siguienteNumero(prev, sig) {
+	return (prev == undefined && sig.numero == 12) ||
+		(sig.numero === prev?.numero - 1)
+}
+
 function siguientePalo(prev, sig) {
 	if (!prev) return true;
-	return (prev.palo === palos[0] || prev.palo === palos[1] ? sig.palo == palos[2] || sig.palo == palos[3] : sig.palo == palos[0] || sig.palo == palos[1]);
+	return (prev.palo === palos[0] || prev.palo === palos[1] ?
+		sig.palo == palos[2] || sig.palo == palos[3] :
+		sig.palo == palos[0] || sig.palo == palos[1]);
 }
 
 //Comprobar victoria
