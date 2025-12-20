@@ -61,6 +61,7 @@ class Carta {
 			newParent.appendChild(this.imgElement);
 			this.currentParent = newParent;
 		}
+		this.imgElement.setAttribute("data-parent", newParent); //Para identificar el mazo origen en el drop de Drag&Drop
 		this.imgElement.style.left = `${x}px`;
 		this.imgElement.style.top = `${y}px`;
 		this.imgElement.style.zIndex = z + 1;
@@ -171,6 +172,8 @@ class Baraja {
 	}) {
 		this.estadoInicial = estadoInicial;
 		this.id = id;
+		const tapete = document.getElementById(this.id);
+		tapete.setAttribute("data-object", this); //Para identificar la baraja en el drop de Drag&Drop
 		this.puedeSacar = puedeSacar;
 		this.reglaAdmision = reglaAdmitir;
 		this.mostrarTodas = mostrarTodas;
