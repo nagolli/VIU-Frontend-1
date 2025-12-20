@@ -27,9 +27,9 @@
 				de movimientos que se han hecho hasta el momento. Estos números se 
 				indicarán en los span internos -->
 		<h2 id="marcadores">
-			<span>Tiempo: <span id="contador_tiempo"></span></span>
-			<span style="display:inline-block; width:200px"></span>
-			<span>Movimientos: <span id="contador_movimientos" class=""></span></span>
+			<span>Tiempo: <span id="contador_tiempo" class="hhmmssBox"></span></span>
+			<span class="box"></span>
+			<span>Movimientos: <span id="contador_movimientos" class="cntBox"></span></span>
 		</h2>
 
 		<!-- La "mesa" contendrá los 6 tapetes. En la parte superior dos de ellos 
@@ -52,7 +52,8 @@
 		</div>
 
 		<!-- Botón de reset que reinicia todo: partida, contadores de tiempo, de movimientos, ... -->
-		<button id="reset" class="btn btn-danger">Reiniciar</button>
+		<button id="reset" class="btn btn-danger" onclick=comenzarJuego()>Reiniciar</button>
+		<button id="reset" class="btn btn-success" onclick=testMove(mazoReceptor1)>Autojugar</button>
 	</div> <!-- class="central" -->
 </body>
 
