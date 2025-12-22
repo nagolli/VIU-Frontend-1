@@ -57,19 +57,24 @@ div.tapete {
 	display: inline-block;
 	position: relative;
 	margin: 10px;
+
+	border: 2px solid rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+	box-sizing: border-box;
+	padding: 8px;
 }
 
 /* Dimensiones y color de fondo para el tapete inicial */
 div.tapete#inicial {
-	width: 340px;
-	height: 340px;
+	width: 360px;
+	height: 360px;
 	background-color: lightgrey;
 }
 
 /* Dimensiones para todos los tapetes salvo el inicial */
 div.tapete:not(#inicial) {
-	height: 125px;
-	width: 100px;
+	height: 135px;
+	width: 110px;
 }
 
 /* Color de fondo para el tapete de las cartas sobrantes */

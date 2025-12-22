@@ -65,7 +65,7 @@ class Carta {
 			this.imgElement.src = this.rutaImagen;
 			this.imgElement.style.maxWidth = "80px";
 			this.imgElement.style.maxHeight = "100px";
-			
+
 			// Hacer la carta draggable
 			this.imgElement.draggable = true;
 			this.imgElement.addEventListener("dragstart", (e) => this.onDragStart(e));
@@ -86,7 +86,7 @@ class Carta {
 		// Encontrar el mazo correspondiente
 		const mazos = [mazoInicial, mazoSobrantes, mazoReceptor1, mazoReceptor2, mazoReceptor3, mazoReceptor4];
 		mazoOrigen = mazos.find(m => m.toString() === parentId);
-		
+
 		// Solo permitir arrastrar si el mazo permite sacar cartas y esta es la carta superior
 		if (mazoOrigen && mazoOrigen.puedeSacar && mazoOrigen.next() === this) {
 			e.dataTransfer.effectAllowed = "move";
@@ -235,12 +235,12 @@ class Baraja {
 		tapete.addEventListener("drop", (e) => {
 			e.preventDefault();
 			tapete.style.boxShadow = "";
-			
+
 			// Intentar mover la carta desde mazoOrigen a este mazo
 			if (mazoOrigen && mazoOrigen !== this) {
 				mazoOrigen.moverA(this);
 			}
-			
+
 			// Restaurar opacidad de todas las cartas
 			document.querySelectorAll('img[draggable="true"]').forEach(img => {
 				img.style.opacity = "1";
@@ -293,8 +293,19 @@ class Baraja {
 			const y = 5;
 			if (!this.mostrarTodas) {
 				const carta = this.next();
-				if (carta) carta.imprimir(x, y, this.mazo.length - 1, tapete);
-			} else {
+				if (carta) {
+					const tapeteRect = tapete.getBoundingClientRect();
+
+					const cardWidth = 80;
+					const cardHeight = 100;
+
+					const xCentrada = (tapeteRect.width - cardWidth) / 2;
+					const yCentrada = (tapeteRect.height - cardHeight) / 2;
+
+					carta.imprimir(xCentrada, yCentrada, this.mazo.length - 1, tapete);
+				}
+			}
+			else {
 				for (let i = 0; i < this.mazo.length; i++) {
 					this.mazo[i].imprimir(x + i * paso, y + i * paso, i, tapete);
 				}
