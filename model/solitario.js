@@ -65,6 +65,10 @@ class Carta {
 			this.imgElement.src = this.rutaImagen;
 			this.imgElement.style.maxWidth = "80px";
 			this.imgElement.style.maxHeight = "100px";
+			
+			// Hacer la carta draggable
+			this.imgElement.draggable = true;
+			this.imgElement.addEventListener("dragstart", (e) => this.onDragStart(e));
 		} else {
 			this.currentParent.removeChild(this.imgElement);
 			newParent.appendChild(this.imgElement);
@@ -74,6 +78,22 @@ class Carta {
 		this.imgElement.style.left = `${x}px`;
 		this.imgElement.style.top = `${y}px`;
 		this.imgElement.style.zIndex = z + 1;
+	}
+
+	onDragStart(e) {
+		// Guardar referencia al mazo origen
+		const parentId = this.imgElement.getAttribute("data-parent");
+		// Encontrar el mazo correspondiente
+		const mazos = [mazoInicial, mazoSobrantes, mazoReceptor1, mazoReceptor2, mazoReceptor3, mazoReceptor4];
+		mazoOrigen = mazos.find(m => m.toString() === parentId);
+		
+		// Solo permitir arrastrar si el mazo permite sacar cartas y esta es la carta superior
+		if (mazoOrigen && mazoOrigen.puedeSacar && mazoOrigen.next() === this) {
+			e.dataTransfer.effectAllowed = "move";
+			this.imgElement.style.opacity = "0.5";
+		} else {
+			e.preventDefault();
+		}
 	}
 }
 
@@ -184,6 +204,8 @@ class Baraja {
 		setTimeout(() => {
 			const tapete = document.getElementById(this.id);
 			tapete.setAttribute("data-object", this); //Para identificar la baraja en el drop de Drag&Drop
+			// Configurar eventos de drop en el tapete
+			this.configurarEventosDrop(tapete);
 		}, 50);
 		this.puedeSacar = puedeSacar;
 		this.reglaAdmision = reglaAdmitir;
@@ -191,6 +213,39 @@ class Baraja {
 		this.alVaciarse = alVaciarse;
 		this.contador = contador;
 		this.reiniciar(); //Set mazo
+	}
+
+	configurarEventosDrop(tapete) {
+		tapete.addEventListener("dragover", (e) => {
+			e.preventDefault();
+			e.dataTransfer.dropEffect = "move";
+		});
+
+		tapete.addEventListener("dragenter", (e) => {
+			e.preventDefault();
+			tapete.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+		});
+
+		tapete.addEventListener("dragleave", (e) => {
+			if (e.target === tapete) {
+				tapete.style.boxShadow = "";
+			}
+		});
+
+		tapete.addEventListener("drop", (e) => {
+			e.preventDefault();
+			tapete.style.boxShadow = "";
+			
+			// Intentar mover la carta desde mazoOrigen a este mazo
+			if (mazoOrigen && mazoOrigen !== this) {
+				mazoOrigen.moverA(this);
+			}
+			
+			// Restaurar opacidad de todas las cartas
+			document.querySelectorAll('img[draggable="true"]').forEach(img => {
+				img.style.opacity = "1";
+			});
+		});
 	}
 
 	toString() {
@@ -368,27 +423,13 @@ let contTiempo = new Temporizador("contador_tiempo");
 
 //#region TESTING
 //Funcion para testear el movimiento automático de cartas sin el drag&drop
-let nextAutoMove;
-function testMove(r) {
-	nextAutoMove = setTimeout(() => {
-		if (r.mazo.length == numeros.length)
-			testMove(r == mazoReceptor1 ? mazoReceptor2 : r == mazoReceptor2 ? mazoReceptor3 : r == mazoReceptor3 ? mazoReceptor4 : mazoReceptor1);
-		else {
-			mazoInicial.moverA(r);
-			nextAutoMove = setTimeout(() => {
-				mazoInicial.moverA(mazoSobrantes);
-				testMove(r == mazoReceptor1 ? mazoReceptor2 : r == mazoReceptor2 ? mazoReceptor3 : r == mazoReceptor3 ? mazoReceptor4 : mazoReceptor1);
-			}, 500);
-		}
-	}, 500);
-}
-//#endregion
+let nextMove;
 
 //#region GUI
 // Rutina asociada a boton reset
 // Desarrollo del comienzo de juego
 function comenzarJuego() {
-	if (nextAutoMove) clearTimeout(nextAutoMove);
+	if (nextMove) clearTimeout(nextMove);
 	// Barajar y dejar mazoInicial en tapete inicial
 	resetMazos();
 	// Puesta a cero de contadores de mazos

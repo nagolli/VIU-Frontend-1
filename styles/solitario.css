@@ -40,7 +40,7 @@ h1#titulo {
 }
 
 /* Centrado de los marcadores de tiempo y movimientos */
-h2#marcadores {
+h3#marcadores {
 	text-align: center;
 }
 
@@ -80,4 +80,39 @@ div.tapete#sobrantes {
 /* Color de fondo de los tapetes receptores */
 div.tapete.receptor {
 	background-color: lightgreen;
+}
+
+/* Estilo para cartas arrastrables */
+img[draggable="true"] {
+	cursor: grab;
+	transition: opacity 0.2s;
+}
+
+img[draggable="true"]:active {
+	cursor: grabbing;
+}
+
+/* Estilos del header */
+
+img#header-logo {
+	max-width: 150px;
+	max-height: 150px;
+	width: auto;
+	height: auto;
+	filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Estilos del contenedor del header dentro de central */
+div#header-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 30px;
+	margin-bottom: 20px;
+	margin-top: 20px
+}
+
+div#header-content h1 {
+	margin: 0;
+	color: #E65014;
 }
